@@ -93,7 +93,8 @@ const CONFIG = {
   INSTAGRAM_URL: "",     // e.g. https://instagram.com/yourhandle
   TIKTOK_URL: "",        // e.g. https://tiktok.com/@yourhandle
   PRICE_DH: null,        // number, e.g. 450  (null = price not shown yet)
-  ORDER_API_URL: "",    // your backend endpoint that emails each order, e.g. https://your-site.netlify.app/.netlify/functions/order
+  ORDER_API_URL: "/api/order",   // Vercel endpoint that emails each order
+  DELIVERY_FEE_DH: null, // number, e.g. 30 (null = "to be confirmed")
   IMAGES: []             // product photos (the first one is also used in the hero)
 };
 /* ================================================= */
@@ -156,7 +157,7 @@ checkout: () => { if (!cart.length) return views.cart(); const t = cart.reduce((
   ${CONFIG.WHATSAPP_NUMBER ? "" : `<div class="cfg">Owner note: set WHATSAPP_NUMBER in CONFIG to receive orders.</div>`}
   <label>Full name</label><input id="nm" autocomplete="name"><label>Phone number</label><input id="ph" type="tel" autocomplete="tel" placeholder="06 XX XX XX XX">
   <label>City</label><input id="ct" autocomplete="address-level2"><label>Delivery address</label><textarea id="ad" rows="3"></textarea>
-  <div class="err" id="er"></div><p><button class="btn" id="send">Order via WhatsApp</button></p></div>
+  <div class="err" id="er"></div><p><button class="btn" id="send">Place order</button></p></div>
   <div><div class="eyebrow">Summary</div>${cart.map(i => `<div class="sum" style="font-size:15px;padding:10px 0"><span>${P.name} · ${i.size} × ${i.q}</span><span>${CONFIG.PRICE_DH == null ? "" : money(CONFIG.PRICE_DH * i.q)}</span></div>`).join("")}
   <div class="sum" style="border-top:1px solid var(--line)"><span>Total</span><span>${CONFIG.PRICE_DH == null ? "—" : money(CONFIG.PRICE_DH * t)}</span></div>
   <div class="note">Payment: cash on delivery. You pay when your order arrives. We confirm every order by WhatsApp.</div></div></section>`; },
@@ -181,14 +182,7 @@ function msg(d) {
     CONFIG.PRICE_DH == null ? `Items: ${t}` : `Total: ${money(CONFIG.PRICE_DH * t)}`, "Payment: Cash on delivery", "",
     `Name: ${d.nm}`, `Phone: ${d.ph}`, `City: ${d.ct}`, `Address: ${d.ad}`].join("\n");
 }
-let notified = "";
-function notify(d, text) {
-  if (!CONFIG.ORDER_API_URL || notified === text) return; notified = text;
-  const items = cart.map(i => ({name: P.name, size: i.size, qty: i.q, unit_dh: CONFIG.PRICE_DH}));
-  fetch(CONFIG.ORDER_API_URL, {method: "POST", headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({customer: d, items, total_dh: CONFIG.PRICE_DH == null ? null : CONFIG.PRICE_DH * cart.reduce((a, i) => a + i.q, 0), payment: "Cash on delivery"})}).catch(() => { notified = ""; });
-}
-document.addEventListener("click", e => {
+document.addEventListener("click", async e => {
   const g = e.target.closest("[data-s],[data-q],[data-t],[data-c],[data-r],#add,#buy,#send,#bg"); if (!g) return;
   const er = $("#er");
   if (g.id === "bg") return $("#nv").classList.toggle("open");
@@ -207,10 +201,19 @@ document.addEventListener("click", e => {
     const d = {nm: $("#nm").value.trim(), ph: $("#ph").value.trim(), ct: $("#ct").value.trim(), ad: $("#ad").value.trim()};
     if (!d.nm || !d.ct || !d.ad) { er.textContent = "Please fill in your name, city and address."; return; }
     if (d.ph.replace(/\D/g, "").length < 9) { er.textContent = "Please enter a valid phone number."; return; }
-    const text = msg(d); notify(d, text);
-    if (!CONFIG.WHATSAPP_NUMBER) { er.textContent = "WhatsApp number not set yet. Order message prepared:\n" + text; er.style.whiteSpace = "pre-wrap"; return; }
-    window.open("https://wa.me/" + CONFIG.WHATSAPP_NUMBER + "?text=" + encodeURIComponent(text), "_blank");
-    cart = []; save(); app.innerHTML = `<section><div class="eyebrow">Thank you</div><h1>Order sent</h1><p class="story">Finish sending the message in WhatsApp. We confirm your order and delivery there. You pay cash on delivery.</p><a class="btn" href="#home">Back home</a></section>`;
+    const btn = $("#send"); btn.disabled = true; btn.textContent = "Sending…"; er.textContent = "";
+    try {
+      const r = await fetch(CONFIG.ORDER_API_URL, {method: "POST", headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({customer: d, items: cart.map(i => ({name: P.name, size: i.size, qty: i.q})), unit_dh: CONFIG.PRICE_DH, delivery_fee_dh: CONFIG.DELIVERY_FEE_DH, payment: "Cash on delivery"})});
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok || !j.ok) throw new Error("order_failed");
+      const text = msg(d), wa = CONFIG.WHATSAPP_NUMBER ? `<a class="btn o" target="_blank" rel="noopener" href="https://wa.me/${CONFIG.WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}">Confirm on WhatsApp</a>` : "";
+      cart = []; save();
+      app.innerHTML = `<section><div class="eyebrow">Thank you</div><h1>Order received</h1><p class="story">Your order ${j.id} is confirmed. We will call you to arrange delivery. You pay cash on delivery.</p><div class="row"><a class="btn" href="#home">Back home</a>${wa}</div></section>`;
+    } catch (_) {
+      btn.disabled = false; btn.textContent = "Place order";
+      er.textContent = "We couldn’t send your order. Please try again in a moment" + (CONFIG.WHATSAPP_NUMBER ? ", or order on WhatsApp." : ".");
+    }
   }
 });
 link($("#fi"), CONFIG.INSTAGRAM_URL); link($("#ft"), CONFIG.TIKTOK_URL);
