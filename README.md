@@ -1,0 +1,2 @@
+# cursed.br
+cursed
