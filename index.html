@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CURSED — Not made to fit in.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050505;--fg:#f4f4f2;--mut:#8a8a86;--line:#222;--d:'Anton','Impact','Arial Narrow',sans-serif;--b:'Inter',system-ui,sans-serif;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 15px/1.6 var(--b);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}button{font:inherit;color:inherit;cursor:pointer}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;justify-content:space-between;padding:18px 5vw;background:rgba(5,5,5,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:#050505;z-index:21}
+.logo{font:400 26px var(--d);letter-spacing:.18em}
+nav{display:flex;gap:28px;align-items:center;font-size:12px;letter-spacing:.2em;text-transform:uppercase}
+nav a{opacity:.65;transition:.25s}nav a:hover,nav a.on{opacity:1}
+.cartb{border:1px solid var(--fg);background:none;padding:6px 14px;font-size:12px;letter-spacing:.15em}
+.burger{display:none;background:none;border:0;font-size:22px}
+@media(max-width:760px){.burger{display:block}nav{position:absolute;top:100%;left:0;right:0;flex-direction:column;background:#050505;padding:24px 5vw;gap:20px;display:none;border-bottom:1px solid var(--line)}nav.open{display:flex}}
+main{min-height:80vh}
+.view{animation:in .7s cubic-bezier(.2,.7,.2,1)}
+@keyframes in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.hero{position:relative;min-height:calc(100svh - 70px);display:flex;flex-direction:column;justify-content:flex-end;padding:5vw;overflow:hidden;background:radial-gradient(ellipse at 70% 20%,#1b1b1b,#050505 70%)}
+.hero .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,#050505 5%,transparent 60%)}
+.hero>*{position:relative;z-index:2}
+.big{font:400 clamp(70px,19vw,300px)/.85 var(--d);letter-spacing:.04em;margin:0}
+.tag{font:400 clamp(18px,3vw,36px) var(--d);letter-spacing:.2em;margin:18px 0 28px}
+.btn{display:inline-block;background:var(--fg);color:#050505;padding:16px 36px;border:0;font-size:12px;font-weight:600;letter-spacing:.25em;text-transform:uppercase;transition:.25s}
+.btn:hover{background:#050505;color:var(--fg);box-shadow:inset 0 0 0 1px var(--fg)}
+.btn.o{background:none;color:var(--fg);box-shadow:inset 0 0 0 1px var(--fg)}.btn.o:hover{background:var(--fg);color:#050505}
+.btn[disabled]{opacity:.4;pointer-events:none}
+.marq{overflow:hidden;border-block:1px solid var(--line);padding:14px 0;white-space:nowrap;font:400 22px var(--d);letter-spacing:.2em}
+.marq span{display:inline-block;animation:m 25s linear infinite}
+@keyframes m{to{transform:translateX(-50%)}}
+section{padding:90px 5vw}
+h1,h2{font:400 clamp(40px,7vw,96px)/.95 var(--d);letter-spacing:.03em;margin:0 0 24px;text-transform:uppercase}
+.eyebrow{font-size:11px;letter-spacing:.35em;color:var(--mut);text-transform:uppercase;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:2px;background:var(--line)}
+.card{background:var(--bg);display:block}
+.ph{aspect-ratio:4/5;background:#0d0d0d;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
+.ph img{width:100%;height:100%;object-fit:cover;transition:transform .8s}
+.card:hover .ph img{transform:scale(1.05)}
+.ph .w{font:400 clamp(40px,8vw,90px) var(--d);writing-mode:vertical-rl;letter-spacing:.2em;color:transparent;-webkit-text-stroke:1px #444}
+.meta{display:flex;justify-content:space-between;padding:16px 18px;font-size:13px;letter-spacing:.12em;text-transform:uppercase}
+.split{display:grid;grid-template-columns:1.1fr 1fr;gap:5vw;align-items:start}
+@media(max-width:860px){.split{grid-template-columns:1fr}section{padding:60px 5vw}}
+.thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:6px}
+.thumbs .ph{aspect-ratio:1;cursor:pointer;opacity:.5}.thumbs .ph.on{opacity:1;outline:1px solid var(--fg)}
+.price{font:400 34px var(--d);letter-spacing:.08em;margin:6px 0 20px}
+.sizes{display:flex;gap:10px;margin:10px 0 22px}
+.sizes button{width:56px;height:52px;background:none;border:1px solid #444;letter-spacing:.1em}
+.sizes button.on{background:var(--fg);color:#050505;border-color:var(--fg)}
+.qty{display:inline-flex;border:1px solid #444;margin:10px 0 22px}.qty button{width:44px;height:44px;background:none;border:0;font-size:18px}.qty span{width:44px;text-align:center;line-height:44px}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+ul.d{padding:0;list-style:none;border-top:1px solid var(--line);margin:28px 0 0}ul.d li{padding:12px 0;border-bottom:1px solid var(--line);color:#c9c9c5;font-size:14px}
+.err{color:#ff8a80;font-size:13px;min-height:20px}
+.line{display:grid;grid-template-columns:90px 1fr auto;gap:18px;align-items:center;padding:20px 0;border-bottom:1px solid var(--line)}
+.line .ph{aspect-ratio:3/4}.line .ph .w{font-size:26px}
+.x{background:none;border:0;color:var(--mut);text-decoration:underline;font-size:12px;padding:0}
+.sum{display:flex;justify-content:space-between;padding:18px 0;font-size:18px;letter-spacing:.1em;text-transform:uppercase}
+label{display:block;font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--mut);margin:18px 0 6px}
+input,textarea{width:100%;background:none;border:0;border-bottom:1px solid #555;color:var(--fg);padding:10px 0;font:inherit;outline:0;border-radius:0}input:focus,textarea:focus{border-color:var(--fg)}
+.note{border:1px solid var(--line);padding:16px;margin:20px 0;font-size:13px;color:#c9c9c5}
+.cfg{background:#1a1500;border:1px solid #5a4a00;color:#e8d27a;padding:12px 16px;font-size:13px;margin:16px 0}
+footer{border-top:1px solid var(--line);padding:50px 5vw;display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--mut)}
+footer a:hover{color:var(--fg)}
+.story{font-size:clamp(18px,2.2vw,26px);line-height:1.5;max-width:900px;color:#d6d6d2;font-weight:300}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="#home">CURSED</a>
+  <button class="burger" id="bg" aria-label="Menu">☰</button>
+  <nav id="nv">
+    <a href="#home" data-p="home">Home</a><a href="#shop" data-p="shop">Shop</a><a href="#about" data-p="about">About</a><a href="#contact" data-p="contact">Contact</a>
+    <a href="#cart" class="cartb" data-p="cart">Cart (<span id="cc">0</span>)</a>
+  </nav>
+</header>
+<main id="app"></main>
+<footer>
+  <span>© 2026 CURSED — Drop 001</span>
+  <span><a id="fi" target="_blank" rel="noopener">Instagram</a> &nbsp;/&nbsp; <a id="ft" target="_blank" rel="noopener">TikTok</a></span>
+</footer>
+<script>
+/* ============ EASY-TO-EDIT SETTINGS ============ */
+const CONFIG = {
+  WHATSAPP_NUMBER: "",   // international format, digits only, e.g. 2126XXXXXXXX
+  INSTAGRAM_URL: "",     // e.g. https://instagram.com/yourhandle
+  TIKTOK_URL: "",        // e.g. https://tiktok.com/@yourhandle
+  PRICE_DH: null,        // number, e.g. 450  (null = price not shown yet)
+  ORDER_API_URL: "",    // your backend endpoint that emails each order, e.g. https://your-site.netlify.app/.netlify/functions/order
+  IMAGES: []             // product photos (the first one is also used in the hero)
+};
+/* ================================================= */
+const P = {id:"baggy-sweatpants",name:"Cursed Baggy Sweatpants",sizes:["S","M","L","XL"]};
+const $ = s => document.querySelector(s), app = $("#app");
+const money = n => CONFIG.PRICE_DH == null ? "—" : n.toLocaleString("fr-MA") + " DH";
+const priceTxt = () => CONFIG.PRICE_DH == null ? "Price coming soon" : money(CONFIG.PRICE_DH);
+let cart = []; try { cart = JSON.parse(localStorage.getItem("cursed_cart") || "[]"); } catch (e) {}
+const save = () => { try { localStorage.setItem("cursed_cart", JSON.stringify(cart)); } catch (e) {} $("#cc").textContent = cart.reduce((a, i) => a + i.q, 0); };
+const ph = (i = 0, cls = "") => CONFIG.IMAGES[i] ? `<div class="ph ${cls}"><img src="${CONFIG.IMAGES[i]}" alt="${P.name}" loading="lazy"></div>` : `<div class="ph ${cls}"><span class="w">CURSED</span></div>`;
+const addItem = (size, q) => { const f = cart.find(i => i.size === size); f ? f.q += q : cart.push({size, q}); save(); };
+let sel = {size: null, q: 1, img: 0};
+
+const views = {
+home: () => `
+<div class="hero">${CONFIG.IMAGES[0] ? `<img class="bg" src="${CONFIG.IMAGES[0]}" alt="">` : ""}
+  <div class="eyebrow">Men’s Streetwear — Drop 001</div>
+  <h1 class="big">CURSED</h1><p class="tag">NOT MADE TO FIT IN.</p>
+  <div><a class="btn" href="#shop">Shop the drop</a></div></div>
+<div class="marq"><span>${"DROP 001 &nbsp;✦&nbsp; NOT MADE TO FIT IN &nbsp;✦&nbsp; ".repeat(10)}</span></div>
+<section><div class="eyebrow">Collection</div><h2>Drop 001</h2>
+  <div class="grid"><a class="card" href="#product">${ph(0)}<div class="meta"><span>${P.name}</span><span>${priceTxt()}</span></div></a></div></section>
+<section class="split" style="border-top:1px solid var(--line)"><div>${ph(1)}</div><div>
+  <div class="eyebrow">Featured</div><h2>Baggy<br>Sweatpants</h2>
+  <p class="story">Black. Oversized. Wide-leg. A white calligraphy print runs vertically down the leg, about 60&nbsp;cm of ink.</p>
+  <p><a class="btn o" href="#product">View product</a></p></div></section>
+<section style="border-top:1px solid var(--line)"><div class="eyebrow">The story</div>
+  <p class="story">CURSED is built for the ones who never matched the room. No logos shouting, no trends followed. Just black, white and a point of view. Drop 001 is where it starts.</p>
+  <p><a class="btn o" href="#about">About CURSED</a></p></section>`,
+
+shop: () => `<section><div class="eyebrow">Drop 001</div><h1>Shop</h1>
+  <div class="grid"><a class="card" href="#product">${ph(0)}<div class="meta"><span>${P.name}</span><span>${priceTxt()}</span></div></a></div></section>`,
+
+product: () => { const im = CONFIG.IMAGES.length ? CONFIG.IMAGES : [null];
+  return `<section class="split"><div><div id="main">${ph(sel.img)}</div>
+  <div class="thumbs">${im.slice(0, 8).map((_, i) => `<div data-t="${i}" class="${i === sel.img ? "on" : ""}">${ph(i)}</div>`).join("")}</div></div>
+  <div><div class="eyebrow">Drop 001</div><h1 style="font-size:clamp(36px,5vw,72px)">${P.name}</h1>
+  <div class="price">${priceTxt()}</div>
+  <div class="eyebrow">Size</div><div class="sizes">${P.sizes.map(s => `<button data-s="${s}" class="${sel.size === s ? "on" : ""}">${s}</button>`).join("")}</div>
+  <div class="eyebrow">Quantity</div><div class="qty"><button data-q="-1">−</button><span>${sel.q}</span><button data-q="1">+</button></div>
+  <div class="err" id="er"></div>
+  <div class="row"><button class="btn o" id="add">Add to cart</button><button class="btn" id="buy">Buy now</button></div>
+  <ul class="d"><li>Black oversized baggy sweatpants</li><li>Wide-leg fit</li><li>Adjustable waistband</li><li>White artistic calligraphy print, vertical, about 60&nbsp;cm</li><li>Sizes S, M, L, XL</li><li>Cash on delivery across Morocco</li></ul></div></section>`; },
+
+about: () => `<section><div class="eyebrow">About</div><h1>Not made<br>to fit in.</h1>
+  <p class="story">CURSED is a men’s streetwear label from Morocco. Luxury underground in spirit: minimal, mysterious, built around silhouette and graphic detail.</p>
+  <p class="story">Every drop is small and deliberate. Drop 001 opens with the Baggy Sweatpants, cut wide and finished with hand-drawn white calligraphy.</p>
+  <p><a class="btn" href="#shop">Shop the drop</a></p></section>`,
+
+cart: () => { const t = cart.reduce((a, i) => a + i.q, 0);
+  return `<section><div class="eyebrow">Your bag</div><h1>Cart</h1>${!cart.length ? `<p>Your cart is empty.</p><a class="btn" href="#shop">Shop the drop</a>` :
+  cart.map((i, n) => `<div class="line">${ph(0)}<div><b>${P.name}</b><br><span style="color:var(--mut)">Size ${i.size} · ${priceTxt()}</span><br>
+  <div class="qty" style="margin:10px 0 4px"><button data-c="${n}" data-d="-1">−</button><span>${i.q}</span><button data-c="${n}" data-d="1">+</button></div> <button class="x" data-r="${n}">Remove</button></div>
+  <div>${CONFIG.PRICE_DH == null ? "" : money(CONFIG.PRICE_DH * i.q)}</div></div>`).join("") +
+  `<div class="sum"><span>Total (${t})</span><span>${CONFIG.PRICE_DH == null ? "—" : money(CONFIG.PRICE_DH * t)}</span></div>
+  <p style="color:var(--mut);font-size:13px">Cash on delivery. Delivery fee, if any, confirmed on WhatsApp.</p><a class="btn" href="#checkout">Checkout</a>`}</section>`; },
+
+checkout: () => { if (!cart.length) return views.cart(); const t = cart.reduce((a, i) => a + i.q, 0);
+  return `<section class="split"><div><div class="eyebrow">Cash on delivery</div><h1>Checkout</h1>
+  ${CONFIG.WHATSAPP_NUMBER ? "" : `<div class="cfg">Owner note: set WHATSAPP_NUMBER in CONFIG to receive orders.</div>`}
+  <label>Full name</label><input id="nm" autocomplete="name"><label>Phone number</label><input id="ph" type="tel" autocomplete="tel" placeholder="06 XX XX XX XX">
+  <label>City</label><input id="ct" autocomplete="address-level2"><label>Delivery address</label><textarea id="ad" rows="3"></textarea>
+  <div class="err" id="er"></div><p><button class="btn" id="send">Order via WhatsApp</button></p></div>
+  <div><div class="eyebrow">Summary</div>${cart.map(i => `<div class="sum" style="font-size:15px;padding:10px 0"><span>${P.name} · ${i.size} × ${i.q}</span><span>${CONFIG.PRICE_DH == null ? "" : money(CONFIG.PRICE_DH * i.q)}</span></div>`).join("")}
+  <div class="sum" style="border-top:1px solid var(--line)"><span>Total</span><span>${CONFIG.PRICE_DH == null ? "—" : money(CONFIG.PRICE_DH * t)}</span></div>
+  <div class="note">Payment: cash on delivery. You pay when your order arrives. We confirm every order by WhatsApp.</div></div></section>`; },
+
+contact: () => `<section><div class="eyebrow">Contact</div><h1>Talk to us</h1>
+  <p class="story">Questions about sizing, delivery or your order? Message us.</p>
+  <div class="row"><a class="btn" id="cw" target="_blank" rel="noopener">WhatsApp</a><a class="btn o" id="ci" target="_blank" rel="noopener">Instagram</a><a class="btn o" id="ct2" target="_blank" rel="noopener">TikTok</a></div></section>`
+};
+
+function link(el, url) { if (!el) return; if (url) { el.href = url; el.style.display = ""; } else el.style.display = "none"; }
+function route() {
+  let h = (location.hash || "#home").slice(1); if (!views[h]) h = "home";
+  app.innerHTML = `<div class="view">${views[h]()}</div>`;
+  document.querySelectorAll("nav a").forEach(a => a.classList.toggle("on", a.dataset.p === h));
+  $("#nv").classList.remove("open"); window.scrollTo(0, 0);
+  const wa = CONFIG.WHATSAPP_NUMBER ? "https://wa.me/" + CONFIG.WHATSAPP_NUMBER : "";
+  link($("#cw"), wa); link($("#ci"), CONFIG.INSTAGRAM_URL); link($("#ct2"), CONFIG.TIKTOK_URL);
+}
+function msg(d) {
+  const t = cart.reduce((a, i) => a + i.q, 0);
+  return ["*NEW ORDER — CURSED (Drop 001)*", "", ...cart.map(i => `• ${P.name} — Size ${i.size} × ${i.q}` + (CONFIG.PRICE_DH == null ? "" : ` = ${money(CONFIG.PRICE_DH * i.q)}`)), "",
+    CONFIG.PRICE_DH == null ? `Items: ${t}` : `Total: ${money(CONFIG.PRICE_DH * t)}`, "Payment: Cash on delivery", "",
+    `Name: ${d.nm}`, `Phone: ${d.ph}`, `City: ${d.ct}`, `Address: ${d.ad}`].join("\n");
+}
+let notified = "";
+function notify(d, text) {
+  if (!CONFIG.ORDER_API_URL || notified === text) return; notified = text;
+  const items = cart.map(i => ({name: P.name, size: i.size, qty: i.q, unit_dh: CONFIG.PRICE_DH}));
+  fetch(CONFIG.ORDER_API_URL, {method: "POST", headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({customer: d, items, total_dh: CONFIG.PRICE_DH == null ? null : CONFIG.PRICE_DH * cart.reduce((a, i) => a + i.q, 0), payment: "Cash on delivery"})}).catch(() => { notified = ""; });
+}
+document.addEventListener("click", e => {
+  const g = e.target.closest("[data-s],[data-q],[data-t],[data-c],[data-r],#add,#buy,#send,#bg"); if (!g) return;
+  const er = $("#er");
+  if (g.id === "bg") return $("#nv").classList.toggle("open");
+  if (g.dataset.s) { sel.size = g.dataset.s; return route(); }
+  if (g.dataset.q) { sel.q = Math.max(1, Math.min(10, sel.q + +g.dataset.q)); return route(); }
+  if (g.dataset.t) { sel.img = +g.dataset.t; return route(); }
+  if (g.dataset.c) { const i = cart[+g.dataset.c]; i.q = Math.max(1, Math.min(10, i.q + +g.dataset.d)); save(); return route(); }
+  if (g.dataset.r) { cart.splice(+g.dataset.r, 1); save(); return route(); }
+  if (g.id === "add" || g.id === "buy") {
+    if (!sel.size) { er.textContent = "Please select a size."; return; }
+    if (g.id === "add") { addItem(sel.size, sel.q); er.style.color = "#9be59b"; er.textContent = "Added to cart."; }
+    else { cart = [{size: sel.size, q: sel.q}]; save(); location.hash = "#checkout"; }
+    return;
+  }
+  if (g.id === "send") {
+    const d = {nm: $("#nm").value.trim(), ph: $("#ph").value.trim(), ct: $("#ct").value.trim(), ad: $("#ad").value.trim()};
+    if (!d.nm || !d.ct || !d.ad) { er.textContent = "Please fill in your name, city and address."; return; }
+    if (d.ph.replace(/\D/g, "").length < 9) { er.textContent = "Please enter a valid phone number."; return; }
+    const text = msg(d); notify(d, text);
+    if (!CONFIG.WHATSAPP_NUMBER) { er.textContent = "WhatsApp number not set yet. Order message prepared:\n" + text; er.style.whiteSpace = "pre-wrap"; return; }
+    window.open("https://wa.me/" + CONFIG.WHATSAPP_NUMBER + "?text=" + encodeURIComponent(text), "_blank");
+    cart = []; save(); app.innerHTML = `<section><div class="eyebrow">Thank you</div><h1>Order sent</h1><p class="story">Finish sending the message in WhatsApp. We confirm your order and delivery there. You pay cash on delivery.</p><a class="btn" href="#home">Back home</a></section>`;
+  }
+});
+link($("#fi"), CONFIG.INSTAGRAM_URL); link($("#ft"), CONFIG.TIKTOK_URL);
+window.addEventListener("hashchange", route); save(); route();
+</script>
+</body>
+</html>
